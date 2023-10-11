@@ -1,0 +1,43 @@
+Imports System.Data.OleDb
+
+Public Class WebForm1
+    Inherits System.Web.UI.Page
+    Dim con As New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\jatvi\Music\set1\set1\set1.mdb")
+    Dim cmd As New OleDbCommand
+    Dim ad As New OleDbDataAdapter
+    Dim ds As New DataSet
+
+    Sub display()
+        con.Open()
+        cmd.CommandText = "SELECT * FROM set1"
+        cmd.Connection = con
+        ad.SelectCommand = cmd
+        cmd.ExecuteNonQuery()
+        ds.Clear()
+        ad.Fill(ds, "set1")
+        GridView1.DataSource = ds.Tables("set1")
+        con.Close()
+
+        GridView1.DataBind()
+    End Sub
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        display()
+    End Sub
+
+    Protected Sub Button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Button1.Click
+        con.Open()
+        cmd.CommandText = "INSERT INTO set1 VALUES(@id, @TName, @TAge, @TMobileNumber)"
+        cmd.Parameters.AddWithValue("@id", Val(TextBox1.Text))
+        cmd.Parameters.AddWithValue("@TName", TextBox2.Text)
+        cmd.Parameters.AddWithValue("@TAge", Val(TextBox3.Text))
+        cmd.Parameters.AddWithValue("@TMobileNumber", Val(TextBox4.Text))
+        cmd.Connection = con
+        ad.SelectCommand = cmd
+        cmd.ExecuteNonQuery()
+        con.Close()
+
+
+        display()
+    End Sub
+End Class

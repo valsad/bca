@@ -1,0 +1,39 @@
+Imports System.Data.OleDb
+
+Public Class WebForm1
+    Inherits System.Web.UI.Page
+
+    Dim con As New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\jatvi\Music\set2\set2\set2.mdb")
+    Dim cmd As New OleDbCommand
+    Dim ad As New OleDbDataAdapter
+    Dim ds As New DataSet
+
+    Sub display()
+        con.Open()
+        cmd.CommandText = "SELECT * FROM set2"
+        cmd.Connection = con
+        ad.SelectCommand = cmd
+        cmd.ExecuteNonQuery()
+        ds.Clear()
+        ad.Fill(ds, "set2")
+        GridView1.DataSource = ds.Tables("set2")
+        con.Close()
+
+        GridView1.DataBind()
+    End Sub
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        display()
+    End Sub
+
+    Protected Sub Button1_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Button1.Click
+        con.Open()
+        cmd.CommandText = "UPDATE set2 SET Oitem='" & TextBox2.Text & "', ONumber='" & Val(TextBox3.Text) & "' WHERE ID=" & Val(TextBox1.Text)
+        cmd.Connection = con
+        ad.SelectCommand = cmd
+        cmd.ExecuteNonQuery()
+        con.Close()
+
+        display()
+    End Sub
+End Class

@@ -1,0 +1,47 @@
+Imports System.Data.OleDb
+
+
+Public Class WebForm1
+    Inherits System.Web.UI.Page
+
+    Dim con As New OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\Users\jatvi\OneDrive\Pictures\Database4.mdb")
+    Dim cmd As New OleDbCommand
+    Dim ad As New OleDbDataAdapter
+    Dim ds As New DataSet
+
+    Sub display()
+        con.Open()
+        cmd.CommandText = "select * from lastexam"
+        cmd.Connection = con
+        ad.SelectCommand = cmd
+        cmd.ExecuteNonQuery()
+        ds.Clear()
+        ad.Fill(ds, "lastexam")
+        GridView1.DataSource = ds.Tables("lastexam")
+        con.Close()
+
+        GridView1.DataBind()
+
+
+    End Sub
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        display()
+
+    End Sub
+
+    Protected Sub Button2_Click(ByVal sender As Object, ByVal e As EventArgs) Handles Button2.Click
+        con.Open()
+        cmd.CommandText = "Select * from lastexam WHERE ID=@id"
+        cmd.Parameters.AddWithValue("@id", Val(TextBox1.Text))
+        cmd.Connection = con
+        ad.SelectCommand = cmd
+        cmd.ExecuteNonQuery()
+        ds.Clear()
+        ad.Fill(ds, "lastexam")
+
+        GridView1.DataSource = ds.Tables("lastexam")
+        con.Close()
+        GridView1.DataBind()
+    End Sub
+End Class
